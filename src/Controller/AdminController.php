@@ -2,7 +2,11 @@
 
 namespace App\Controller;
 
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+
 use App\Entity\Product;
+use App\Entity\SubCategory;
+use App\Form\ProductType;
 use App\Repository\ProductRepository;
 use App\Repository\SubCategoryRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -22,86 +26,126 @@ class AdminController extends AbstractController
             'controller_name' => 'AdminController',
         ]);
     }
-
     /**
-     * @Route("/admin/add/product", name="AjoutProduit")
+     * @Route("/ajout_produit",name="ajout_produit")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @return Response
      */
-    public function AddProduct(SubCategoryRepository $subCategoryRepository, ManagerRegistry $managerRegistry, Request $request): Response
+    public function ajout_produit(Request $request): Response
     {
-        $subcategories = $subCategoryRepository->findAll();
-
-
         $product = new Product();
+        $form = $this->createForm(ProductType::class, $product);
+        $form->add('save', SubmitType::class);
 
-        if ($request->isMethod("POST")) {
-            $product->setName($request->get("name"));
-            $product->setDescription($request->get("description"));
-            $product->setImage($request->get("image"));
+        $form->handleRequest($request);
 
-            $managerRegistry->getManager()->persist($product);
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $uploadedFile */
+            $uploadedFile = $form['image']->getData();
+            if ($uploadedFile) {
+                $destination = $this->getParameter('kernel.project_dir') . '/public/uploads';
+                $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $newFilename = $originalFilename . '-' . uniqid() . '.' . $uploadedFile->guessExtension();
+                $uploadedFile->move(
+                    $destination,
+                    $newFilename
+                );
+                $product->setImage($newFilename);
+            }
+            $em = $this->getDoctrine()->getManager();
 
-            $managerRegistry->getManager()->flush();
+            $em->persist($product);
+            $em->flush();
+            return $this->redirectToRoute('shop');
         }
-
-
-
-        return $this->render('admin/addProduct.html.twig', [
-            "subcategories" => $subcategories,
-        ]);
+        return $this->render('test/ajout.html.twig', ['form' => $form->createView()]);
     }
 
 
+
     /**
-     * @Route("/admin/delete/product", name="DeleteProduct")
+     * @Route ("product/Update{id}",name="Updateproduct")
      */
-    public function removeProduct(ProductRepository $productRepository, ManagerRegistry $managerRegistry, Request $request): Response
+    function Update_Product(ProductRepository $repository, $id, Request $request)
     {
-        $products = $productRepository->findAll();
 
+        $produit = $repository->find($id);
+        $form = $this->createForm(ProductType::class, $produit);
+        $form->add('save', SubmitType::class);
 
-        if ($request->isMethod("POST")) {
-            $product = $productRepository->findOneBy(["id" => $request->get("id")]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
 
-
-            $managerRegistry->getManager()->remove($product);
-
-
-            $managerRegistry->getManager()->flush();
+            /** @var UploadedFile $uploadedFile */
+            $uploadedFile = $form['image']->getData();
+            if ($uploadedFile) {
+                $destination = $this->getParameter('kernel.project_dir') . '/public/uploads';
+                $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $newFilename = $originalFilename . '-' . uniqid() . '.' . $uploadedFile->guessExtension();
+                $uploadedFile->move(
+                    $destination,
+                    $newFilename
+                );
+                $produit->setImage($newFilename);
+            }
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+            return $this->redirectToRoute('front');
         }
-
-
-
-        return $this->render('admin/deleteProduct.html.twig', [
-            "products" => $products,
+        return $this->render('test/modif.html.twig', [
+            'form' => $form->createView()
         ]);
     }
 
     /**
-     * @Route("/admin/update/product/{id}", name="UpdateProduct")
+     * @Route("Deleteproduct/{id}/",name="delete_product")
      */
-    public function UpdateProduct($id, ProductRepository $productRepository, ManagerRegistry $managerRegistry, Request $request): Response
+
+    public function DeleteProduct($id, ProductRepository $repository)
     {
-        $product = $productRepository->findOneBy(["id" => $id]);
+        $em = $this->getDoctrine()->getManager();
+        $product = $repository->find($id);
+        $em->remove($product);
+        $em->flush();
+        return $this->redirectToRoute('shop');
+    }
 
 
 
-        if ($request->isMethod("POST")) {
+    /**
+     * @Route("/ajout_sub_category",name="ajout_sub_category")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @return Response
+     */
+    public function ajout_sub_category(Request $request): Response
+    {
+        $sub_category = new SubCategory();
+        $form = $this->createForm(ProductType::class, $sub_category);
+        $form->add('save', SubmitType::class);
 
-            $product->setName($request->get("name"));
-            $product->setDescription($request->get("description"));
-            $product->setImage($request->get("image"));
+        $form->handleRequest($request);
 
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $uploadedFile */
+            $uploadedFile = $form['image']->getData();
+            if ($uploadedFile) {
+                $destination = $this->getParameter('kernel.project_dir') . '/public/uploads';
+                $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $newFilename = $originalFilename . '-' . uniqid() . '.' . $uploadedFile->guessExtension();
+                $uploadedFile->move(
+                    $destination,
+                    $newFilename
+                );
+                $sub_category->setImage($newFilename);
+            }
+            $em = $this->getDoctrine()->getManager();
 
-            $managerRegistry->getManager()->persist($product);
-
-
-            $managerRegistry->getManager()->flush();
+            $em->persist($sub_category);
+            $em->flush();
+            return $this->redirectToRoute('shop');
         }
-
-
-
-        return $this->render('admin/updateProduct.html.twig', [
-            "product" => $product,
-        ]);
+        return $this->render('test/ajout.html.twig', ['form' => $form->createView()]);
     }
 }

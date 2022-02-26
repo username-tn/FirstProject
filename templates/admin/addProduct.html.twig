@@ -395,6 +395,13 @@
 
 								<input class="border border-4 border-red-500 mx-2" name="name" type="text">
 							</div>
+
+							<div class="flex">
+								<h1 class="text-3xl">prix :</h1>
+
+								<input class="border border-4 border-red-500 mx-2" name="prix" type="text">
+							</div>
+
 							<div class="flex">
 								<h1 class="text-3xl">Description :</h1>
 								<input name="description" type="text">
@@ -404,9 +411,10 @@
 								<h1 class="text-3xl">Image :</h1>
 								<input name="image" type="text">
 							</div>
+
 							<div class="flex">
 								<h1 class="text-3xl">Sub Category</h1>
-								<select name="id">
+								<select name="subcat">
 									{% for subcat in subcategories %}
 										<option value="{{subcat.id}}">{{subcat.name}}</option>
 

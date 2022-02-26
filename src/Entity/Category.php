@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\ProductRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ProductRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
@@ -16,26 +17,31 @@ class Category
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("product")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("product")
      */
     private $Name;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("product")
      */
     private $Description;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("product")
      */
     private $image;
 
     /**
      * @ORM\OneToMany(targetEntity=SubCategory::class, mappedBy="Category")
+     * 
      */
     private $subCategories;
 

@@ -32,7 +32,7 @@ class CommandeController extends AbstractController
     // public function ajout_produit(Request $request): Response
     // {
     //     $produit = new Product();
-    //     $form = $this->createForm(Produ::class, $produit);
+    //     $form = $this->createForm(Product::class, $produit);
     //     $form->add('save', SubmitType::class);
 
     //     $form->handleRequest($request);

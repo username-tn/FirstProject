@@ -47,4 +47,17 @@ class ProductRepository extends ServiceEntityRepository
         ;
     }
     */
+
+
+    public function filter($price, $id)
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->where("p.prix < :price and p.SubCategory = :id")
+            ->setParameter('price', $price)
+            ->setParameter('id', $id);
+
+        $query = $qb->getQuery();
+
+        return $query->execute();
+    }
 }

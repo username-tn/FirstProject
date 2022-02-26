@@ -387,7 +387,14 @@
 						</div>
 					</div>
 				</div>
+
+				<a href="/ajout_sub_category" class="mb-8">
+					<i class="icon-search cl2 m-r-6 fs-15 "></i>
+					Add New Sub Category
+				</a>
+
 				<div class="row isotope-grid">
+
 
 					{% for subcat in subcategories %}
 
@@ -398,7 +405,7 @@
 								<div class="block2-pic hov-img0">
 									<img src="{{subcat.image}}" alt="IMG-PRODUCT">
 
-									<a href="/subcat/{{subcat.id}}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 ">
+									<a href=" {{ path('produit',{'id':subcat.id})}}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 ">
 										Quick View
 									</a>
 								</div>

@@ -23,15 +23,4 @@ class ShopController extends AbstractController
             'categories' => $categories,
         ]);
     }
-
-    /**
-     * @Route("/category/{id}", name="subCategories")
-     */
-    public function ListofSubCategories(String $id, SubCategoryRepository $subCategoryRepository): Response
-    {
-        $subcategories = $subCategoryRepository->findBy(["Category" => $id]);
-
-
-        return $this->render('front/SubCategories.html.twig', []);
-    }
 }
