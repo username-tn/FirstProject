@@ -111,7 +111,6 @@ class Category
     {
         return $this->name;
     }
-
     /**
      * @return Collection|SubCategory[]
      */
@@ -135,10 +134,15 @@ class Category
         if ($this->subCategories->removeElement($subCategory)) {
             // set the owning side to null (unless already changed)
             if ($subCategory->getCategory() === $this) {
-                $subCategory->setCategory(null);
+                $subCategory->setCategory('null');
             }
         }
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->getName();
     }
 }

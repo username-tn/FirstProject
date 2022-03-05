@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Repository\SubCategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class SubcategoryController extends AbstractController
@@ -15,9 +16,6 @@ class SubcategoryController extends AbstractController
     public function index($id, SubCategoryRepository $subCategoryRepository): Response
     {
         $subcategories = $subCategoryRepository->findBy(["Category" => $id]);
-
-
-
 
         return $this->render('subcategory/index.html.twig', [
             'subcategories' => $subcategories,

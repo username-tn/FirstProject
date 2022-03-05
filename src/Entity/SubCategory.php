@@ -40,7 +40,7 @@ class SubCategory
     private $image;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="subCategories")
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="subCategory")
      * @ORM\JoinColumn(nullable=false)
      * @Groups("product")
      */
@@ -101,7 +101,7 @@ class SubCategory
         return $this->Category;
     }
 
-    public function setCategory(?Category $Category): self
+    public function setCategory(Category $Category): self
     {
         $this->Category = $Category;
 

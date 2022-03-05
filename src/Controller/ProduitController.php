@@ -4,8 +4,9 @@ namespace App\Controller;
 
 use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -56,6 +57,76 @@ class ProduitController extends AbstractController
 
 
         return $this->render('produit/filter.html.twig', array(
+            'id' => $id,
+            'products' => $product,
+        ));
+    }
+
+
+    /**
+     * @Route("/product/{id}/asc", name="produit_asc")
+     */
+    public function productASC(NormalizerInterface $normalizer,  $id, ProductRepository $productRepository, Request $request): Response
+    {
+
+        $product = $productRepository->findBy(["SubCategory" => $id], ['prix' => 'ASC']);
+
+
+        if ($request->isMethod('post')) {
+
+            if ($request->get("searchfilter")) {
+                $name = $request->get("searchfilter");
+                $filterProduct = $productRepository->findBy(["Name" => $name]);
+            }
+
+
+
+
+            return $this->render('produit/index.html.twig', array(
+                'id' => $id,
+                'products' => $filterProduct,
+            ));
+        }
+        // dd($product);
+        // $content = $normalizer->normalize($product, 'json', ['groups' => 'product']);
+
+        // return new Response(json_encode($content));
+
+        return $this->render('produit/index.html.twig', array(
+            'id' => $id,
+            'products' => $product,
+        ));
+    }
+    /**
+     * @Route("/product/{id}/desc", name="produit_desc")
+     */
+    public function productDesc(NormalizerInterface $normalizer,  $id, ProductRepository $productRepository, Request $request): Response
+    {
+
+        $product = $productRepository->findBy(["SubCategory" => $id], ['prix' => 'DESC']);
+
+
+        if ($request->isMethod('post')) {
+
+            if ($request->get("searchfilter")) {
+                $name = $request->get("searchfilter");
+                $filterProduct = $productRepository->findBy(["Name" => $name]);
+            }
+
+
+
+
+            return $this->render('produit/index.html.twig', array(
+                'id' => $id,
+                'products' => $filterProduct,
+            ));
+        }
+        // dd($product);
+        // $content = $normalizer->normalize($product, 'json', ['groups' => 'product']);
+
+        // return new Response(json_encode($content));
+
+        return $this->render('produit/index.html.twig', array(
             'id' => $id,
             'products' => $product,
         ));

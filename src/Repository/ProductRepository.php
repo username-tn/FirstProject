@@ -57,7 +57,6 @@ class ProductRepository extends ServiceEntityRepository
             ->setParameter('id', $id);
 
         $query = $qb->getQuery();
-
         return $query->execute();
     }
 }
